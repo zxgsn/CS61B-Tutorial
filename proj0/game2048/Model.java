@@ -119,6 +119,9 @@ public class Model extends Observable {
             position=-1;
             for(int j=3;j>=0;--j){
                 if(board.tile(i,j)==null){
+                    if(position!=-1){
+                        continue;
+                    }
                     position=j;
                 }
                 else if(position!=-1){
@@ -129,48 +132,39 @@ public class Model extends Observable {
                 }
             }
         }
-
        //merge
-        /**for(int i=0;i<=3;++i){
-            //for(int j=3;j>=0;--j){
-            int j=3;
-                if(board.tile(i,j)==null)
-                    continue;
-                if(board.tile(i,j).value()==board.tile(i,j-1).value()) {
-                    Tile change = board.tile(i, j - 1);
-                    board.move(i, j, change);
-                    score+=board.tile(i,j).value()*2;
-                }
-                if(board.tile(i,j-2)!=null) {
-                    if(board.tile(i,j-2).value()==board.tile(i,j-3).value()) {
-                        Tile change2 = board.tile(i, j - 3);
-                        board.move(i, j-1, change2);
-                        score += board.tile(i, j-2).value() * 2;
-                    }
-                        Tile change3 = board.tile(i, j + 1);
-                        board.move(i, j + 1, change3);
-                    }
-
-            }*/
-        int judge=0;//判断状态
         for(int i=0;i<=3;++i){
             int lastseat=-1;
-            for(int j=3;j>=0;--j){
-                if(board.tile(i,j)==null)
+            for(int j=3;j>0;--j){
+                if(board.tile(i,j)==null){
+                    lastseat=j;
                     continue;
+                }
+
                 else if(lastseat>=j){
                     //说明之前已经合并过，不再合并
                     if(board.tile(i,j-1)==null) {
                         Tile change2 = board.tile(i, j);
                         board.move(i, lastseat, change2);
                         changed=true;
-                        lastseat = -1;
+                        lastseat = j;
                     }
                     else if(board.tile(i,j).value()== board.tile(i,j-1).value()){
-                        Tile change3 = board.tile(i,j-1);
+
+                        Tile change4 = board.tile(i,j-1);
+                        board.move(i,j,change4);
+                        Tile change3 = board.tile(i,j);
                         board.move(i,lastseat,change3);
                         changed=true;
-                        score +=board.tile(i,j).value()*2;
+                        score +=board.tile(i,lastseat).value();
+                    }
+                    else{
+                        Tile change5=board.tile(i,j);
+                        board.move(i,lastseat,change5);
+                        lastseat=j-1;
+                        //Tile change6=board.tile(i,j-1);
+                       // board.move(i,lastseat,change6);
+                       // lastseat=j-1;
                     }
 
                 }
@@ -183,8 +177,6 @@ public class Model extends Observable {
                     lastseat=j-1;
                     changed=true;
                 }
-
-
             }
         }
 
