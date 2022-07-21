@@ -26,6 +26,7 @@ public class AListNoResizing<Item> {
 
     /** Inserts X into the back of the list. */
     public void addLast(Item x) {
+
         items[size] = x;
         size = size + 1;
     }
